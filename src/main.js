@@ -5,7 +5,7 @@ const ccBgColor01 = document.querySelector(".cc-bg svg > g g:nth-child(1) path")
 const ccBgColor02 = document.querySelector(".cc-bg svg > g g:nth-child(2) path")
 const bgLogo = document.querySelector(".cc-logo span:nth-child(2) img")
 
-function setCardColors(type){
+function setCardType(type){
   
   const colors = {
     visa: ["#E94D1F", "#FFA724"],
@@ -17,7 +17,8 @@ function setCardColors(type){
   ccBgColor02.setAttribute("fill", colors[type][1])
   bgLogo.setAttribute("src", `cc-${type}.svg`)
 }
-setCardColors("default")
+// setCardColors("default")
+globalThis.setCardType = setCardType;
 
 const securityCode = document.querySelector('#security-code')
 const securityCodePattern = {
@@ -75,3 +76,54 @@ const cardNumberPattern = {
 }
 
 const cardNumberMasked = IMask(cardNumber, cardNumberPattern)
+
+const addButton = document.querySelector("#add-card")
+addButton.addEventListener("click", (e) => {
+  // e.preventDefault()
+  // console.log("vc clicou")
+  alert('Cartão Adicionado!')
+})
+
+document.querySelector("form").addEventListener("submit", (e) => {
+  e.preventDefault()
+})
+
+const cardHolder = document.querySelector("#card-holder")
+cardHolder.addEventListener("input", () => {
+  const ccHolder = document.querySelector(".cc-holder .value")
+  
+  // console.log(cardHolder.value.length)
+  ccHolder.innerText = cardHolder.value.length === 0 ? "FULANO DA SILVA" : cardHolder.value
+})
+
+// codigo do cartão - CVC
+securityCodeMasked.on("accept", () => {
+  updateSecurityCode(securityCodeMasked.value);
+})
+
+function updateSecurityCode(code){
+  const ccSecurity = document.querySelector(".cc-security .value");
+  ccSecurity.innerText = code.length === 0 ? "123" : code
+}
+
+cardNumberMasked.on("accept", () => {
+  const cardType = cardNumberMasked.masked.currentMask.cardtype
+  setCardType(cardType)
+  updateCardNumber(cardNumberMasked.value)
+})
+
+function updateCardNumber(number){
+  const ccNumber = document.querySelector(".cc-number")
+
+  ccNumber.innerText = number.length === 0 ? "1234 5678 9012 3456" : number
+}
+
+expirationCodeMasked.on("accept", () => {
+  updateExpirationDate(expirationCodeMasked.value)
+})
+
+function updateExpirationDate(date){
+  // na aula ele pega (".cc-extra .value")
+  const ccExpiration = document.querySelector(".cc-expiration .value")
+  ccExpiration.innerText = date.length === 0 ? "02/32" : date
+}
